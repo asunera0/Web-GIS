@@ -91,15 +91,15 @@ Created layers as :
     map.addLayer(l_symd);
 
 
-        3. Created 3 .php file under /public_html/proj1/mapscripts and named the as 
+        3. Created 3 .php file  and named  as 
 template1.php,template2.php,template3.php : These files consists of map object .
 Created a new map object and provided path of the .map file
 as following in each file :
-$oMap = ms_newMapobj("/home/sune17/public_html/proj1/maps/template.map");
+$oMap = ms_newMapobj("/home/proj1/maps/template.map");
 This file provides the definition of map file. 
 
 
-1. Created a .map file under /public_html/proj1/maps
+1. Created a .map file 
 as template.map : This mapfile consists of all layers and symbol definition
 I have created symbol definition for 
 POINT :    SYMBOL
