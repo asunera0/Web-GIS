@@ -1,8 +1,4 @@
 #Project - 1 
-URL
-1.       http://134.74.146.40/~sune17/proj1/template1.html
-2.       http://134.74.146.40/~sune17/proj1/template2.html
-3.       http://134.74.146.40/~sune17/proj1/template3.html
 
 
 Task 0 :
@@ -11,7 +7,7 @@ wget http://geoteci.engr.ccny.cuny.edu/WebGIS/proj1_data.tar
 1. Unzipped the downloaded folder of geospatial data consisting of five datasets 
 Command : tar -xvf  proj1_data.tar
 1. Populated the database using following command :
-       /usr/local/pgsql/bin/psql -h 134.74.112.18 -d d211 -U sune17  -f aoi.sql
+       /usr/local/pgsql/bin/psql -h 0.0.0.0 -d dbname -U username  -f aoi.sql
 Similarly for hw,cd,cg and sd  I have used the above database commands.
 Task 1 :
 I have used static map configuration to specify layers in .map file.To visualize these  layers on web browser I retrieved data using below queries
@@ -44,7 +40,7 @@ Task 3 :
 
 
 1. Downloaded the project skeleton using following command in proj1 folder
-wget http://geoteci.engr.ccny.cuny.edu/WebGIS/proj1_template.tar.gz
+wget link-WebGIS/proj1
 1.   Unzipped the downloaded folder into same folder using
    tar -zxvf  proj1_template.tar.gz
 
@@ -55,9 +51,9 @@ wget http://geoteci.engr.ccny.cuny.edu/WebGIS/proj1_template.tar.gz
  template1.html : This file consists of initialization and declaration of three layers AOI,Community district and Highway routes.
 Initialized three layers as : var l_aoi,l_comdis,l_hw; 
 Created layers as : 
-*    l_aoi = new OpenLayers.Layer.WMS("NYC AOI","http://134.74.146.40/~sune17/proj1/mapscripts/template1.php?", {layers:'aoi',format: "image/png"}) ;
-* l_comdis = new OpenLayers.Layer.WMS("Communtiy District Queens","http://134.74.146.40/~sune17/proj1/mapscripts/template1.php?", {layers:'cd1',format: "image/png"} );
-*  l_hw = new OpenLayers.Layer.WMS("Highway Routes","http://134.74.146.40/~sune17/proj1/mapscripts/template1.php?", {layers:'hw',format: "image/png"} );
+*    l_aoi = new OpenLayers.Layer.WMS("NYC AOI","http://134.74.146.40/~su/proj1/mapscripts/template1.php?", {layers:'aoi',format: "image/png"}) ;
+* l_comdis = new OpenLayers.Layer.WMS("Communtiy District Queens","http://134.74.146.40/~su/proj1/mapscripts/template1.php?", {layers:'cd1',format: "image/png"} );
+*  l_hw = new OpenLayers.Layer.WMS("Highway Routes","http://134.74.146.40/~su/proj1/mapscripts/template1.php?", {layers:'hw',format: "image/png"} );
 
 
  Invoking the layers using map.addLayer() as :  
@@ -67,9 +63,9 @@ map.addLayer(l_aoi);
 template2.html :  This file consists of initialization and declaration of two layers Convex Hull of AOI,Highway Buffers..
 Initialized three layers as : var l_aoich,l_hwbuf; 
 Created layers as :
-*  l_aoich = new OpenLayers.Layer.WMS("Convex Hull AOI","http://134.74.146.40/~sune17/proj1/mapscripts/template2.php?", {layers:'ConHullAOI',format: "image/png"} );
+*  l_aoich = new OpenLayers.Layer.WMS("Convex Hull AOI","http://134.74.146.40/~su/proj1/mapscripts/template2.php?", {layers:'ConHullAOI',format: "image/png"} );
       
-*  l_hwbuf = new OpenLayers.Layer.WMS("Highway Buffers","http://134.74.146.40/~sune17/proj1/mapscripts/template2.php?", {layers:'HWBuff',format: "image/png"} );
+*  l_hwbuf = new OpenLayers.Layer.WMS("Highway Buffers","http://134.74.146.40/~su/proj1/mapscripts/template2.php?", {layers:'HWBuff',format: "image/png"} );
       
  Invoking the layers using map.addLayer() as :  
 map.addLayer(l_aoich);
@@ -77,15 +73,15 @@ map.addLayer(l_aoich);
 template3.html :   This file consists of initialization and declaration of five layers 
 Initialized three layers as : var l_ab,l_ba,l_in,l_un,l_symd;
 Created layers as :
-* l_in = new OpenLayers.Layer.WMS("Intersection","http://134.74.146.40/~sune17/proj1/mapscripts/template.php?", {layers:'in',format: "image/png"} );
+* l_in = new OpenLayers.Layer.WMS("Intersection","http://134.74.146.40/~su/proj1/mapscripts/template.php?", {layers:'in',format: "image/png"} );
         
-* l_un = new OpenLayers.Layer.WMS("Union","http://134.74.146.40/~sune17/proj1/mapscripts/template.php?", {layers:'un',format: "image/png"} );
+* l_un = new OpenLayers.Layer.WMS("Union","http://134.74.146.40/~su/proj1/mapscripts/template.php?", {layers:'un',format: "image/png"} );
           
-* l_ab = new OpenLayers.Layer.WMS("Difference CG-SD","http://134.74.146.40/~sune17/proj1/mapscripts/template.php?", {layers:'ab',format: "image/png"} );
+* l_ab = new OpenLayers.Layer.WMS("Difference CG-SD","http://134.74.146.40/~su/proj1/mapscripts/template.php?", {layers:'ab',format: "image/png"} );
           
-* l_ba = new OpenLayers.Layer.WMS("Difference SD-CG ","http://134.74.146.40/~sune17/proj1/mapscripts/template.php?", {layers:'ba',format: "image/png"} );
+* l_ba = new OpenLayers.Layer.WMS("Difference SD-CG ","http://134.74.146.40/~su/proj1/mapscripts/template.php?", {layers:'ba',format: "image/png"} );
      
-* l_symd = new OpenLayers.Layer.WMS("Sym Diff ","http://134.74.146.40/~sune17/proj1/mapscripts/template.php?", {layers:'symd',format: "image/png"} );
+* l_symd = new OpenLayers.Layer.WMS("Sym Diff ","http://134.74.146.40/~su/proj1/mapscripts/template.php?", {layers:'symd',format: "image/png"} );
          
  Invoking the layers using map.addLayer() as :  
     map.addLayer(l_in);
@@ -124,7 +120,7 @@ For each layer :
 *  Specify connection type as :
 CONNECTIONTYPE POSTGIS
 *  To connect to database we define database connection in CONNECTION parameter
-  CONNECTION  "user=sune17 password=aksh dbname=d211 host=134.74.112.18"
+  CONNECTION  "user=uname password=pwd dbname=dbname host=0.0.0.0"
 *  Providing database  query in DATA element for each layer to draw the results on map   
 * In PostGIS layer to every query we specify a unique id to create a VIEW if we want make query calls.
 *  SRID is a coordinate where we store our data.Using SRID we store data in a single coordinate system of a projected coordinate which provides the local interpretation of data in the units. In this case it is 2263.
