@@ -1,0 +1,71 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <script src="js/OpenLayers.js"></script>
+    <script type="text/javascript">
+        var lon = -73.9;
+        var lat = 40.7;
+        var zoom = 10;
+        var map, l_ab,l_ba,l_cd,l_pp,l_unioned,l_aoi,l_comdis,l_hw,l_aoich,l_hwbuf,l_in,l_un,l_symd;
+        function init(){
+            map = new OpenLayers.Map( 'map' );
+            l_cd = new OpenLayers.Layer.WMS( "NYC Community District",
+			    "http://134.74.146.40/~zhang/proj1/mapscripts/template.php?", {layers: 'nycd',format: "image/png"} );
+            map.addLayer(l_cd);
+
+
+	 l_aoi = new OpenLayers.Layer.WMS("AOI","http://134.74.146.40/~sune17/proj1/mapscripts/template.php?", {layers:'aoi',format: "image/png"} );
+            map.addLayer(l_aoi);  
+
+         l_comdis = new OpenLayers.Layer.WMS("Communtiy District Queens","http://134.74.146.40/~sune17/proj1/mapscripts/template.php?", {layers:'cd1',format: "image/png"} );
+            map.addLayer(l_comdis);	
+
+l_pp = new OpenLayers.Layer.WMS( "NYC Police Precinct",
+                    "http://134.74.146.40/~zhang/proj1/mapscripts/template.php?", {layers: 'nypp',format: "image/png"} );
+            map.addLayer(l_pp);
+
+ l_hw = new OpenLayers.Layer.WMS("Highway Routes","http://134.74.146.40/~sune17/proj1/mapscripts/template.php?", {layers:'hw',format: "image/png"} );
+            map.addLayer(l_hw);
+
+
+l_aoich = new OpenLayers.Layer.WMS("Convex Hull AOI","http://134.74.146.40/~sune17/proj1/mapscripts/template.php?", {layers:'ConHullAOI',format: "image/png"} );
+            map.addLayer(l_aoich);
+
+ l_hwbuf = new OpenLayers.Layer.WMS("Highway Buffers","http://134.74.146.40/~sune17/proj1/mapscripts/template.php?", {layers:'HWBuff',format: "image/png"} );
+            map.addLayer(l_hwbuf);
+
+l_in = new OpenLayers.Layer.WMS("Intersection","http://134.74.146.40/~sune17/proj1/mapscripts/template.php?", {layers:'in',format: "image/png"} );
+            map.addLayer(l_in);
+
+l_un = new OpenLayers.Layer.WMS("Union","http://134.74.146.40/~sune17/proj1/mapscripts/template.php?", {layers:'un',format: "image/png"} );
+            map.addLayer(l_un);
+
+
+l_ab = new OpenLayers.Layer.WMS("Diff AB","http://134.74.146.40/~sune17/proj1/mapscripts/template.php?", {layers:'ab',format: "image/png"} );
+            map.addLayer(l_ab);
+
+
+l_ba = new OpenLayers.Layer.WMS("Diff BA","http://134.74.146.40/~sune17/proj1/mapscripts/template.php?", {layers:'ba',format: "image/png"} );
+            map.addLayer(l_ba);
+
+
+
+l_symd = new OpenLayers.Layer.WMS("Sym Diff ","http://134.74.146.40/~sune17/proj1/mapscripts/template.php?", {layers:'symd',format: "image/png"} );
+            map.addLayer(l_symd);
+
+            map.setCenter(new OpenLayers.LonLat(lon, lat), zoom);
+			map.addControl(new OpenLayers.Control.MousePosition({position: new OpenLayers.Pixel(100,0)}));
+            map.addControl(new OpenLayers.Control.LayerSwitcher({'div':OpenLayers.Util.getElement('layerswitcher'),activeColor:'green'}));
+        }
+    </script>
+  </head>
+  <body onload="init()">
+    <h1 id="title">My Proj1</h1>
+    <table><tr>
+    <td><div id="map" style="width:800px; height:600px"></div></td>
+    <td><div id="layerswitcher" style="width:200px; height:600px"></div><td>
+    </tr></table>
+  </body></html>
+
+
+
+
