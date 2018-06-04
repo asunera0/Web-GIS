@@ -1,0 +1,691 @@
+
+
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+      <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+      <title>School Application </title>
+      <style>
+	.nicebox {
+          //position: absolute;
+          float:right;
+          font-family: sans-serif;
+          font-size: 13px;
+         // z-index: 10;
+          box-shadow: 0 4px 6px -4px #333;
+          padding: 5px 10px;
+	  width:20%;
+	  length:1000px;
+          background: #F0F8FF;
+          border: rgb(229, 229, 229) 1px solid;
+        }	
+        .divName {
+	  font-size: 20pt;
+   	  color: #f7941d;
+    	  font-weight: bold;
+    	  text-align: center;
+	}
+	.hdndiv	{
+	 display:none;
+	 background-color:yellow;
+	 width:300px;
+	 float:right;
+	// position:absolute;
+	// z-index:5;
+	}
+        /* Optional: Makes the sample page fill the window. */
+        html, body {
+          height: 100%;
+          margin: 0;
+          padding: 0;
+	  overflow: h
+        }
+	#map {
+  	  width: 77%;
+    	  height: 100%;
+	  float:left ;
+    	  border: 2px solid darkblue;
+	  overflow:h;
+	  padding: 0;
+    	  //position: absolute;
+	  //z-index:10;
+ 	}
+      </style>
+       <script src="./jquery-3.2.1.min.js" type="text/javascript"></script>
+  </head>
+  <body bgcolor='#FAEBD7'>
+  	<div id ="districtPage" >
+		<font color= "blue" font-family=cursive size="10%"> <center> SCHOOL APPLICATION </center></font>
+
+		<table align=right>
+		<tr>
+		<td><input style="background-color: #008CBA; color: white; padding: 6px 6px;" type="button" value="REFRESH MAP" id="schoolDistricts" onclick="initMap()" /></td>
+     	<!--	<td><input style="background-color: #008CBA; color:white; padding: 10px 10px;" type="button" value="SCHOOLS" id="schools" onclick="showSchoolMode()" /></td> 
+-->		<td>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</td>  
+    		<td><input style="background-color: #008CBA; color: white; padding: 6px 6px;" type="button" value="MORE..." id="more" onclick="showOptiondiv()"></td>
+		</table>
+		<!--<div id="leftDiv" style="background-color:lightgrey; width:300px; margin-right:80%"><br>
+        		SCHOOLS <input type="radio" name="show" value="1" onclick="showSchools();"/></br>
+        		LIBRARIES <input type="radio" name="show" value="2" onclick="showLibraries();"/> </br>
+        		SUBWAY STATIONS <input type="radio" name="show" value="3" onclick="showStations();"/></br></br>
+			SUBWAY LINES <input type="radio" name="show" value="4" onclick="showSubwayLines();"/> </br>
+       			 DESELECT <input type="radio" name="show" value="5" onclick="hideMarkers();"/></br>-->
+    <!--</table>--> 
+	
+       	<font size="8%" color="orange">School Search</font> &nbsp&nbsp&nbsp <input type="text" name="dbn" id ="dbn"  placeholder="DBN Number,eg M321"> Graduation Rate:<select id="gradrate" name="gradMenu">
+<option value="default"> - Select One -</option>
+<option value="Below 65%">Below 65%</option>
+<option value="Between 65% and 80%">Between 65% and 80%</option>
+<option value="Between 80% and 90%">Between 80% and 90%</option>
+<option value="Between 90% and 100%">Between 90% and 100%</option></select>&nbsp&nbsp&nbsp <input style="padding:7px 7px; color:blue;" type="submit" value="SEARCH" onclick="searchResult()"> <br> 
+	</div>
+	<script>
+	    $("#gradrate").change(function () {
+                $("#dbn").val("");
+            });
+	</script>
+	<!--</table>-->
+            <!--   </div>
+
+		
+	 	<div class="nicebox"> 
+		<table><tr><td class="divName">District Mode</td></tr>
+		  <tr><td>Click on the district to see following information about it
+			<ul><li> General data about district</li> 
+			    <li> Schools in that distrcit</li>
+			    <li> Click on each schools to see its information </li>
+			</ul> <td><tr>	
+		  <tr><td>Click on 'MORE' button to explore more options
+			<ul> <li> Click 'Schools' to see schools in all the districts</li>
+			     <li> Click 'Libraries' to see libraries in all the districts</li>
+			     <li> Click 'Subway Stations' to see subway stations in all the districts</li>
+			</ul></td></tr>	
+		</table>	
+    	
+		</div>
+		
+	</div-->
+    <!--<table style="background-color:#f1f1c1;" frame=box align=right id="district">
+     <div id="myDiv" style="display:none; background-color:lightgrey; width:300px; margin-left:80%"><br>
+     	<input type="radio" name="show" value="1" onclick="showSchools();"/>SCHOOLS</br>
+     	<input type="radio" name="show" value="2" onclick="showLibraries();"/>LIBRARIES </br>
+     	<input type="radio" name="show" value="3" onclick="showStations();"/>SUBWAYS STATIONS</br></br>
+	<input type="radio" name="show" value="4" onclick="showSubwayLines();"/>SUBWAY LINES</br>
+	<input type="radio" name="show" value="5" onclick="hideMarkers();"/>CLEAR</br>
+    </table>-->
+   
+
+<script>
+	function showOptiondiv() {
+   		 var x = document.getElementById("myDiv");
+    			if (x.style.display === "none") {
+        		x.style.display = "block";
+    			} else {
+        		x.style.display = "none";
+    			}
+	}	
+</script>
+   <hr>
+    <div id="map"> </div>
+    <div>
+                <div id="myDiv" style="display:none;background-color:#f1f1c1; width:300px; margin-left:80%"><br>
+                  <input type="checkbox" name="show" id="1" onclick="tryShowSchools();"/>SCHOOLS</br>
+                  <input type="checkbox" name="show" id="2" onclick="tryShowLibraries();"/>LIBRARIES </br>
+                  <input type="checkbox" name="show" id="3" onclick="tryShowStations();"/>SUBWAYS STATIONS</br>
+                  <input type="checkbox" name="show" id="4" onclick="tryShowSubwayLines();"/>SUBWAY LINES</br>
+                 <!-- <input type="checkbox" name="show" id="5" onclick="hideMarkers();"/>CLEAR</br>*/-->
+    <!--</table>-->
+               </div>
+
+
+                <div class="nicebox">
+                <table><tr><td class="divName">District Mode</td></tr>
+                  <tr><td>Click on the district to see following information about it
+                        <ul><li> General data about district</li>
+                            <li> Schools in that distrcit</li>
+                            <li> Click on each schools to see its information </li>
+                        </ul> <td><tr>
+                  <tr><td>Click on 'MORE' button to explore more options
+                        <ul> <li> Click 'Schools' to see schools in all the districts</li>
+                             <li> Click 'Libraries' to see libraries in all the districts</li>
+                             <li> Click 'Subway Stations' to see subway stations in all the districts</li>
+                        </ul></td></tr>
+                </table>
+
+                </div>
+
+  </div>
+  
+<script type="text/javascript"
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAMsurYzpmyBXebhflJXBzOLR1BRVSMxXo&libraries=visualization&sensor=false"></script>
+
+	<script>	
+		
+		google.maps.event.addDomListener(window, 'load', initMap);
+		
+		var map;
+		var infobox;
+		var markers = [];
+		var libMarker =[];
+		var subMarker = [];
+		var schoolMarker =[];
+		var SchoolData;
+		var Distdata;
+		// to read school district data file --- this is needed to show data about school districts 
+		$.getJSON("http://134.74.146.40/~safv17/proj3/districtData.json", function(json) {
+		    	Distdata =json;
+			console.log(Distdata); // this will show the info it in firebug console
+		});
+			
+			
+		function initMap() {
+		
+		//alert(SchoolData[0].features.properties.DBN);
+        	// load the map
+       		 map = new google.maps.Map(document.getElementById('map'), {
+          			center: {lat:40.7305, lng: -73.9091},
+          				zoom: 10,
+          				mapTypeId: 'terrain'
+					// disableDefaultUI: true
+        			});
+		
+		//map.data.addListener('mouseover', mouseInToRegion);
+        	//map.data.addListener('mouseout', mouseOutOfRegion);
+
+       		 // wire up the button
+       		 //var selectBox = document.getElementById('dropdown-variable');
+        	 //google.maps.event.addDomListener(selectBox, 'change', function() {
+        	 // clearData();
+          	 //loadDataForDropdown(selectBox.options[selectBox.selectedIndex].value);
+        	 // });
+
+		// Load geo data from json file
+		map.data.loadGeoJson('http://134.74.146.40/~safv17/proj3/SchoolDistricts.geojson');
+		map.data.setStyle({
+  			fillColor: 'green',
+  			strokeWeight: 1
+		});
+		map.data.addListener('click', function(event){
+                map.data.setStyle({
+                        fillColor: 'green',
+                        strokeWeight: 1
+                });
+		var prvpos;
+		var pos = new google.maps.LatLng(event.latLng.lat(),event.latLng.lng());
+		var schooldist= event.feature.getProperty('school_dist');
+		
+		var transitLayer;
+	
+		hideMarkers();
+	 	for(var i=0; i < Distdata.length; ++i) {
+		    if(Distdata[i].schooldist == schooldist) {
+        		var msg1 ={ 
+				schools:Distdata[i].schools,
+				students:Distdata[i].students,
+				grad_rate:Distdata[i].grad_rate,
+				libraries:Distdata[i].libraries };
+			
+				break;
+    		    }	
+		}
+		map.data.overrideStyle(event.feature, {fillColor: "orange"});	
+
+		map.data.overrideStyle(event.feature, {lightness: msg1.students*.01});
+		map.data.overrideStyle(event.feature, {saturation: msg1.grad_rate});
+
+		map.panTo(event.latLng);
+		map.setZoom(12);
+
+		showSchoolsInDist(schooldist);
+		if (infobox) {
+        		infobox.close();
+    		}
+	        infobox = new google.maps.InfoWindow();
+		infobox.setContent("<b> School District "+schooldist +"<br> Schools # : </b>"+msg1.schools+"<br> <b> Students # : </b>" +msg1.students+"<br> <b> Graduation Rate :</b> "+ msg1.grad_rate+"<br> <b> Libraries # : </b>"+msg1.libraries);
+		infobox.setPosition(pos);
+		infobox.open(map);
+		});
+		
+		
+				
+		}
+		//hide all markers
+		function hideMarkers() {
+		        setMapOnAll(null);
+      		}
+		
+		function setMapOnAll(map) {
+       			 for (var i = 0; i < markers.length; i++) {
+          		 markers[i].setMap(map);
+       			 }		
+      		}
+
+		//checkbox click event
+                //libraries
+		function tryShowLibraries(){
+                        if (document.getElementById('2').checked)
+                        {
+                                showLibraries();
+                        } else {
+                                for(var i =0; i< libMarker.length; i++)
+                                { libMarker[i].setMap(null); }
+                        }
+                }
+
+		//schools
+                function tryShowSchools(){
+                        if (document.getElementById('1').checked)
+                        {
+                                showSchools();
+                        } else {
+                                for(var i =0; i< schoolMarker.length; i++)
+                                { schoolMarker[i].setMap(null); }
+                        }
+                }
+		
+		//subway stations
+		function tryShowStations(){
+                        if (document.getElementById('3').checked)
+                        {
+                                showStations();
+                        } else {
+                                for(var i =0; i< subMarker.length; i++)
+                                { subMarker[i].setMap(null); }
+                        }
+                }
+
+		 //subway stations
+                function tryShowSubwayLines(){
+                        if (document.getElementById('4').checked)
+                        {
+				transitLayer = new google.maps.TransitLayer();
+				transitLayer.setMap(map);
+                                //showSubwayLines();
+                        } else {
+                        	transitLayer.setMap(null);
+			}
+                }
+
+
+				
+
+		
+		
+		//shows libraries
+		function showLibraries() {
+		
+			var script = document.createElement('script');
+        		script.src = 'http://134.74.146.40/~safv17/proj3/Library2.geojson';
+       			 document.getElementsByTagName('head')[0].appendChild(script);
+      			 // Loop through the results array and place a marker for each
+      			// set of coordinates.
+      			window.eqfeed_callback = function(results) {
+        		for (var i = 0; i < results.features.length; i++) {
+				 var data = {
+                       			name: results.features[i].properties.name,
+                        		borocode: results.features[i].properties.borocode,
+                        		hn: results.features[i].properties.housenum,
+                        		stn: results.features[i].properties.streetname,
+                        		city: results.features[i].properties.city
+                		};
+
+          		var coords = results.features[i].geometry.coordinates;
+          		var latLng = new google.maps.LatLng(coords[1],coords[0]);
+
+
+          		var marker = new google.maps.Marker({
+            		position: latLng,
+           		map: map,
+                        icon: {
+                               path: google.maps.SymbolPath.CIRCLE,
+                               scale: 4.5,
+                               fillColor: "#F00",
+                               fillOpacity: 0.8,
+                               strokeWeight: 0.4
+                       }
+          		});
+			//markers.push(marker);
+			libMarker.push(marker);
+                  	(function (marker, data) {
+                                var infoWindow = new google.maps.InfoWindow();
+                		google.maps.event.addListener(marker, "click", function (e) {
+                    //Wrap the content inside an HTML DIV in order to set height and width of InfoWindow.
+                    infoWindow.setContent("<div style = 'width:200px;min-height:40px;';'><b> Name: </b>" + data.name + "<br><b> Address: </b>" + data.hn+" "+ data.stn +", "+ data.city + "</div>");
+                    infoWindow.open(map, marker);
+                	});
+            		})(marker, data);
+		}
+		}
+            }
+	
+	    //shows schools markers	
+	    function showSchools() {
+
+                        var script = document.createElement('script');
+                        script.src = 'http://134.74.146.40/~batt17/finalproj/schools.geojson';
+                         document.getElementsByTagName('head')[0].appendChild(script);
+                         // Loop through the results array and place a marker for each
+                        // set of coordinates.
+                        window.eqfeed_callback = function(results) {
+                        for (var i = 0; i < results.features.length; i++) {
+                                 var data = {
+					District: results.features[i].properties.District,
+					DBN: results.features[i].properties.DBN,
+                                        Name: results.features[i].properties.Name,
+                                        TotalStudents: results.features[i].properties.TotalStudents,
+                                        GradRate: results.features[i].properties.GradRate,
+                                        SaftyRating: results.features[i].properties.SaftyRating,
+                                        ClassSize: results.features[i].properties.AvgClassSize
+                                };
+		       var colorGR = results.features[i].properties.GradRate;
+                       var coords = results.features[i].geometry.coordinates;
+                        var latLng = new google.maps.LatLng(coords[1],coords[0]);
+
+
+                        var marker = new google.maps.Marker({
+                        position: latLng,
+                        map: map,
+                        icon: {
+                               path: google.maps.SymbolPath.CIRCLE,
+                               scale: colorGR*.06,
+                               fillColor: "blue",
+                               fillOpacity: colorGR*.01,
+                               strokeWeight: 0.3
+                       }
+                        });
+                       // markers.push(marker);
+			schoolMarker.push(marker);
+                        (function (marker, data) {
+                                var infoWindow = new google.maps.InfoWindow();
+                                google.maps.event.addListener(marker, "click", function (e) {
+                    //Wrap the content inside an HTML DIV in order to set height and width of InfoWindow.
+                    infoWindow.setContent("<div style = 'width:200px;min-height:40px;';'><b> Name: </b>" + data.Name + "<br><b> DBN: </b>" + data.District+ data.DBN+ "<br><b> TotalStudents: </b>" + data.TotalStudents +  "<br><b> Graduation Rate: </b>" + data.GradRate + "<br><b> Safty Rating: </b>" + data.SaftyRating + "<br><b> Class Size: </b>" + data.ClassSize + "<br></div>");
+                    infoWindow.open(map, marker);
+			showStationsNearSchools(marker.position.lat(),marker.position.lng());
+                        });
+                        })(marker, data);
+                }
+                }
+            }
+		
+	//schools in a dist
+        function showSchoolsInDist(dist) {
+
+                        var script = document.createElement('script');
+                        script.src = 'http://134.74.146.40/~batt17/finalproj/schools.geojson';
+                         document.getElementsByTagName('head')[0].appendChild(script);
+                         // Loop through the results array and place a marker for each
+                        // set of coordinates.
+                        window.eqfeed_callback = function(results) {
+                        for (var i = 0; i < results.features.length; i++) {
+			     if(results.features[i].properties.District == dist){
+                                 var data = {
+                                        District: results.features[i].properties.District,
+                                        DBN: results.features[i].properties.DBN,
+                                        Name: results.features[i].properties.Name,
+                                        TotalStudents: results.features[i].properties.TotalStudents,
+                                        GradRate: results.features[i].properties.GradRate,
+                                        SaftyRating: results.features[i].properties.SaftyRating,
+                                        ClassSize: results.features[i].properties.AvgClassSize
+                                }
+			     
+			var colorGR = results.features[i].properties.GradRate;
+                       var coords = results.features[i].geometry.coordinates;
+                        var latLng = new google.maps.LatLng(coords[1],coords[0]);
+
+
+                        var marker = new google.maps.Marker({
+                        position: latLng,
+                        map: map,
+                        icon: {
+                               path: google.maps.SymbolPath.CIRCLE,
+                               scale: colorGR*.06,
+                               fillColor: "blue",
+                               fillOpacity: colorGR*.01,
+                               strokeWeight: 0.3
+                       }
+                        });
+                        markers.push(marker);
+                        (function (marker, data) {
+                                var infoWindow = new google.maps.InfoWindow();
+                                google.maps.event.addListener(marker, "click", function (e) {
+                    //Wrap the content inside an HTML DIV in order to set height and width of InfoWindow.
+                    infoWindow.setContent("<div style = 'width:200px;min-height:40px;';'><b> Name: </b>" + data.Name + "<br><b> DBN: </b>" + data.District+ data.DBN+ "<br><b> TotalStudents: </b>" + data.TotalStudents +  "<br><b> Graduation Rate: </b>" + data.GradRate + "<br><b> Safty Rating: </b>" + data.SaftyRating + "<br><b> Class Size: </b>" + data.ClassSize + "<br></div>");
+                    infoWindow.open(map, marker);
+			 showStationsNearSchools(marker.position.lat(),marker.position.lng());
+                        });
+                        })(marker, data);
+                }}
+                }
+            }
+
+	// shows stations
+        function showStations() {
+
+                        var script = document.createElement('script');
+                        script.src = 'http://134.74.146.40/~batt17/finalproj/SubwayStations.geojson';
+                         document.getElementsByTagName('head')[0].appendChild(script);
+                         // Loop through the results array and place a marker for each
+                        // set of coordinates.
+                        window.eqfeed_callback = function(results) {
+                        for (var i = 0; i < results.features.length; i++) {
+                                 var data = {
+                                        line: results.features[i].properties.line,
+                                        name: results.features[i].properties.name,
+                                };
+
+                        var coords = results.features[i].geometry.coordinates;
+                        var latLng = new google.maps.LatLng(coords[1],coords[0]);
+
+
+                        var marker = new google.maps.Marker({
+                        position: latLng,
+                        map: map,
+                        icon: {
+                               path: google.maps.SymbolPath.CIRCLE,
+                               scale: 3.5,
+                               fillColor: "Yellow",
+                               fillOpacity: 0.8,
+                               strokeWeight: 0.2
+                       }
+                        });
+                      //  markers.push(marker);
+                       subMarker.push(marker);
+			 (function (marker, data) {
+                                var infoWindow = new google.maps.InfoWindow();
+                                google.maps.event.addListener(marker, "click", function (e) {
+                    //Wrap the content inside an HTML DIV in order to set height and width of InfoWindow.
+                    infoWindow.setContent("<div style = 'width:200px;min-height:40px;';'><b> Name: </b>" + data.name + "<br><b> Line: </b>" + data.line + "<br></div>");
+                    infoWindow.open(map, marker);
+                        });
+                        })(marker, data);
+                }
+                }
+            }
+
+	// stations near clicked schools
+        function showStationsNearSchools(lat,long) {
+
+                        var script = document.createElement('script');
+                        script.src = 'http://134.74.146.40/~batt17/finalproj/SubwayStations.geojson';
+                         document.getElementsByTagName('head')[0].appendChild(script);
+                         // Loop through the results array and place a marker for each
+                        // set of coordinates.
+                        window.eqfeed_callback = function(results) {
+                        for (var i = 0; i < results.features.length; i++) {
+
+                       		var coords = results.features[i].geometry.coordinates;
+                        	var latLng = new google.maps.LatLng(coords[1],coords[0]);
+				if (latLng.lat()>lat-0.01 & latLng.lat()<lat+0.01 & latLng.lng()>long-0.01 & latLng.lng()<long+0.01){
+
+                                 var data = {
+                                        line: results.features[i].properties.line,
+                                        name: results.features[i].properties.name,
+                                };
+
+
+                        var marker = new google.maps.Marker({
+                        position: latLng,
+                        map: map,
+                        icon: {
+                               path: google.maps.SymbolPath.CIRCLE,
+                               scale: 4.5,
+                               fillColor: "Purple",
+                               fillOpacity: 0.8,
+                               strokeWeight: 0.2
+                       }
+                        });
+                        markers.push(marker);
+                        (function (marker, data) {
+                                var infoWindow = new google.maps.InfoWindow();
+                                google.maps.event.addListener(marker, "click", function (e) {
+                    //Wrap the content inside an HTML DIV in order to set height and width of InfoWindow.
+                    infoWindow.setContent("<div style = 'width:200px;min-height:40px;';'><b> Name: </b>" + data.name + "<br><b> Line: </b>" + data.line + "<br></div>");
+                    infoWindow.open(map, marker);
+                        });
+                        })(marker, data);
+                }
+                }
+            }
+	}
+
+	// subway lines
+
+	function showSubwayLines() {
+	  var transitLayer = new google.maps.TransitLayer();
+	  transitLayer.setMap(map);
+	}	
+
+	
+	//here begins doing the query thing
+	function searchResult()
+	{
+		
+		var dbn = document.getElementById("dbn").value;
+		var e = document.getElementById("gradrate");
+		var strUser = e.options[e.selectedIndex].text;
+		//alert(strUser);
+		if(dbn)
+		{
+			showSchoolsByDbn(dbn);
+		}
+		else if(strUser)
+		{
+			var min,max;
+			switch(strUser) {
+			case "Below 65%":
+			    min = 0;
+			    max = 65;
+			    break;
+			case "Between 65% and 80%":
+			    min = 65;
+			    max = 80;
+			    break;
+			case "Between 80% and 90%":
+			    min = 80;
+			    max = 90;
+		            break;
+			case "Between 90% and 100%":
+			    min = 90;
+			    max = 100;
+			    break;
+			default:
+				alert("Wrong Input");
+				break;
+			}
+			showSchoolsByGradRate(min,max);	
+		}
+		
+	}
+	
+
+	function showSchoolsByDbn(dbn)
+	{
+		 hideMarkers();
+		 var script = document.createElement('script');
+                 script.src = 'http://134.74.146.40/~batt17/finalproj/schools.geojson';
+                 document.getElementsByTagName('head')[0].appendChild(script);
+                         // Loop through the results array and place a marker for each
+                        // set of coordinates.
+		 var setsearch = 1;
+                 window.eqfeed_callback = function(results) {
+                 for (var i = 0; i < results.features.length; i++) {
+                 if(results.features[i].properties.DBN == dbn){
+                 setsearch = 0;
+		 var data = {
+          	       District: results.features[i].properties.District,
+                       DBN: results.features[i].properties.DBN,
+                       Name: results.features[i].properties.Name,
+                       TotalStudents: results.features[i].properties.TotalStudents,
+                       GradRate: results.features[i].properties.GradRate,
+                       SaftyRating: results.features[i].properties.SaftyRating,
+                       ClassSize: results.features[i].properties.AvgClassSize
+                }
+		var coords = results.features[i].geometry.coordinates;
+                var latLng = new google.maps.LatLng(coords[1],coords[0]);
+                var marker = new google.maps.Marker({
+                        position: latLng,
+                        label:data.DBN,
+			map: map,
+                        });
+                markers.push(marker);
+		(function (marker, data) {
+                          var infoWindow = new google.maps.InfoWindow();
+                          google.maps.event.addListener(marker, "click", function (e) {
+                    //Wrap the content inside an HTML DIV in order to set height and width of InfoWindow.
+                    infoWindow.setContent("<div style = 'width:200px;min-height:40px;';'><b> Name: </b>" + data.Name + "<br><b> DBN: </b>" + data.District+ data.DBN+ "<br><b> TotalStudents: </b>" + data.TotalStudents +  "<br><b> Graduation Rate: </b>" + data.GradRate + "<br><b> Safty Rating: </b>" + data.SaftyRating + "<br><b> Class Size: </b>" + data.ClassSize + "<br></div>");
+                    infoWindow.open(map, marker);
+                        showStationsNearSchools(marker.position.lat(),marker.position.lng());
+                        });
+                        })(marker, data);
+               	 } }
+                }
+	}
+	
+	function showSchoolsByGradRate(min,max)
+	{
+		 hideMarkers();
+                 var script = document.createElement('script');
+                 script.src = 'http://134.74.146.40/~batt17/finalproj/schools.geojson';
+                 document.getElementsByTagName('head')[0].appendChild(script);
+                         // Loop through the results array and place a marker for each
+                        // set of coordinates.
+                 window.eqfeed_callback = function(results) {
+                 for (var i = 0; i < results.features.length; i++) {
+                 if((results.features[i].properties.GradRate > min) && (results.features[i].properties.GradRate <= max ) ){
+                 var data = {
+                       District: results.features[i].properties.District,
+                       DBN: results.features[i].properties.DBN,
+                       Name: results.features[i].properties.Name,
+                       TotalStudents: results.features[i].properties.TotalStudents,
+                       GradRate: results.features[i].properties.GradRate,
+                       SaftyRating: results.features[i].properties.SaftyRating,
+                       ClassSize: results.features[i].properties.AvgClassSize
+                }
+                var coords = results.features[i].geometry.coordinates;
+                var latLng = new google.maps.LatLng(coords[1],coords[0]);
+                var marker = new google.maps.Marker({
+                        position: latLng,
+                        label:data.GradRate,
+                        map: map,
+                        });
+                markers.push(marker);
+                (function (marker, data) {
+                          var infoWindow = new google.maps.InfoWindow();
+                          google.maps.event.addListener(marker, "click", function (e) {
+                    //Wrap the content inside an HTML DIV in order to set height and width of InfoWindow.
+                    infoWindow.setContent("<div style = 'width:200px;min-height:40px;';'><b> Name: </b>" + data.Name + "<br><b> DBN: </b>" + data.District+ data.DBN+ "<br><b> TotalStudents: </b>" + data.TotalStudents +  "<br><b> Graduation Rate: </b>" + data.GradRate + "<br><b> Safty Rating: </b>" + data.SaftyRating + "<br><b> Class Size: </b>" + data.ClassSize + "<br></div>");
+                    infoWindow.open(map, marker);
+                        showStationsNearSchools(marker.position.lat(),marker.position.lng());
+                        });
+                        })(marker, data);
+                 } }
+                }
+	
+	}
+
+</script>
+    
+</body>
+</html>
